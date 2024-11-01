@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { ConflictException } from '@nestjs/common';
 
 let mockDb = {
     from: jest.fn().mockReturnThis(),
@@ -21,6 +22,7 @@ describe('UsersService', () => {
         }).compile();
 
         service = module.get<UsersService>(UsersService);
+        jest.clearAllMocks()
     });
 
     it('should be defined', () => {
@@ -47,7 +49,21 @@ describe('UsersService', () => {
             expect(mockDb.insert).toHaveBeenCalled();
         });
 
-    });
 
+        it('should not create a duplicate user', async () => {
+            const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890' };
+
+            mockDb.select.mockReturnValueOnce({
+                from: jest.fn().mockReturnThis(),
+                where: jest.fn().mockReturnValue([{ ...newUser, id: 1 }]),
+            });
+
+            await expect(service.createUser(newUser)).rejects.toThrow(ConflictException);
+
+            expect(mockDb.select).toHaveBeenCalled();
+            expect(mockDb.insert).not.toHaveBeenCalled();
+        });
+
+    });
 });
 
