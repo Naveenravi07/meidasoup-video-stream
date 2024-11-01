@@ -12,6 +12,7 @@ export class UsersService {
     }
 
     async createUser(user:typeof schema.usersTable.$inferInsert){
+        console.log("Inside service")
         return await this.database.insert(schema.usersTable).values(user).returning()
     }
 }
