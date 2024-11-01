@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpStatus, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserRequest } from './dto/create-user-request.dto';
-import { GResponse } from 'comon/classes/GResponse';
+import { GResponse } from '../../comon/classes/GResponse';
 
 @Controller('users')
 export class UsersController {
