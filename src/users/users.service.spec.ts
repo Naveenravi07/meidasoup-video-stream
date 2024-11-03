@@ -1,9 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { json } from 'stream/consumers';
-import exp from 'constants';
-import { async } from 'rxjs';
 
 let mockDb = {
     from: jest.fn().mockReturnThis(),
@@ -52,7 +49,6 @@ describe('UsersService', () => {
             expect(mockDb.insert).toHaveBeenCalled();
         });
 
-
         it('should not create a duplicate user', async () => {
             const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890' };
 
@@ -66,8 +62,6 @@ describe('UsersService', () => {
             expect(mockDb.select).toHaveBeenCalled();
             expect(mockDb.insert).not.toHaveBeenCalled();
         });
-
-
 
     });
 
