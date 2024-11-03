@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
+import { json } from 'stream/consumers';
+import exp from 'constants';
+import { async } from 'rxjs';
 
 let mockDb = {
     from: jest.fn().mockReturnThis(),
@@ -64,6 +67,46 @@ describe('UsersService', () => {
             expect(mockDb.insert).not.toHaveBeenCalled();
         });
 
+
+
     });
+
+    describe("get user", () => {
+        it('should return the user details successfully', async () => {
+            const user = { email: 'test@example.com', name: 'Test User', phone: '1234567890' };
+
+            mockDb.select.mockReturnValueOnce({
+                from: jest.fn().mockReturnThis(),
+                where: jest.fn().mockReturnValueOnce([{ ...user, id: 1 }])
+            })
+            let res = await service.getUser(1);
+            expect(res).toEqual({ ...user, id: 1 })
+
+        })
+
+        it('should  throw a not found exception when a invalid id provided', async () => {
+            let some_random_stupid_id = 931318318;
+
+            mockDb.select.mockReturnValueOnce({
+                from: jest.fn().mockReturnThis(),
+                where: jest.fn().mockReturnValueOnce([])
+            })
+            await expect(service.getUser(some_random_stupid_id)).rejects.toThrow(NotFoundException)
+            expect(mockDb.select).toHaveBeenCalled()
+
+        })
+
+        it('should throw not found exception when a null id  field is provided', async () => {
+            let some_random_stupid_id = null;
+
+            mockDb.select.mockReturnValueOnce({
+                from: jest.fn().mockReturnThis(),
+                where: jest.fn().mockReturnValueOnce([])
+            })
+            await expect(service.getUser(some_random_stupid_id)).rejects.toThrow(NotFoundException)
+            expect(mockDb.select).toHaveBeenCalled()
+        })
+
+    })
 });
 
