@@ -1,15 +1,17 @@
 import { HttpStatus } from "@nestjs/common";
 
-export class GResponse{
-    status : HttpStatus = 200;
-    data : any;
-    message : string;
-    error = false;
+export class GResponse {
+    status: HttpStatus = HttpStatus.OK;
+    data: any = null;
+    message: string = '';
+    error: boolean = false;
 
-    constructor(obj : Partial<GResponse>){
-        this.status = obj.status;
-        this.data = obj.data;
-        this.message = obj.message;
-        this.error = obj.error;
+    constructor(obj?: Partial<GResponse>) {
+        if (obj) {
+            this.status = obj.status ?? HttpStatus.OK;
+            this.data = obj.data ?? null;
+            this.message = obj.message ?? '';
+            this.error = obj.error ?? false;
+        }
     }
 }

@@ -97,7 +97,7 @@ describe('UsersService', () => {
                 from: jest.fn().mockReturnThis(),
                 where: jest.fn().mockReturnValueOnce([])
             })
-            await expect(service.getUser(some_random_stupid_id)).rejects.toThrow(NotFoundException)
+            await expect(service.getUser(some_random_stupid_id as unknown as number)).rejects.toThrow(NotFoundException)
             expect(mockDb.select).toHaveBeenCalled()
         })
 

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { BadRequestException } from '@nestjs/common';
-import { CreateUserRequest } from './dto/create-user-request.dto';
+import { CreateUserRequest } from './dto/create-user-request';
 
 describe('UsersController', () => {
   let controller: UsersController;
