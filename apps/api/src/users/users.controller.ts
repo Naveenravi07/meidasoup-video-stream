@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, ParseIntPipe, Post, Query, UsePipes 
 import { UsersService } from './users.service';
 import { GResponse } from '../../comon/classes/GResponse';
 import { createUserRequestSchema,CreateUserRequest } from './dto/create-user-request';
+import {} from "@repo/shared-types"
 import { ZodValidationPipe } from '../../comon/pipes/zodValidationPipe';
 
 @Controller('users')
