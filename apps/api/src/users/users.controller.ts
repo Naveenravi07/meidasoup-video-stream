@@ -3,8 +3,7 @@ import { UsersService } from './users.service';
 import { GResponse } from '../../comon/classes/GResponse';
 import { createUserRequestSchema } from './dto/create-user-request';
 import type { CreateUserRequest } from './dto/create-user-request';
-import {User} from "@repo/shared-types"
-import { ZodValidationPipe } from '../../comon/pipes/zodValidationPipe';
+import {ZodValidationPipe } from '../../comon/pipes/zodValidationPipe';
 
 @Controller('users')
 export class UsersController {
