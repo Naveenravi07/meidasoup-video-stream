@@ -8,10 +8,6 @@ import { eq } from 'drizzle-orm';
 export class UsersService {
     constructor(@Inject(DATABASE_CONNECTION) private readonly database: NodePgDatabase<typeof schema>) { }
 
-    async getAllUsers() {
-        return this.database.query.usersTable.findMany()
-    }
-
     async createUser(user: typeof schema.usersTable.$inferInsert) {
         const existingUser = (await this.database
             .select()
@@ -22,7 +18,10 @@ export class UsersService {
             throw new ConflictException('A user with this email already exists.');
         }
         const newUser = await this.database.insert(schema.usersTable).values(user).returning();
-        return newUser.at(0)
+        const userWithoutPwd = { ...newUser.at(0) };
+        delete userWithoutPwd.pwd;
+        return userWithoutPwd;
+
     }
 
 
@@ -30,6 +29,14 @@ export class UsersService {
         let user = (await this.database.select().from(schema.usersTable).where(eq(schema.usersTable.id, id))).at(0)
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`)
+        }
+        return user
+    }
+
+    async getUserByEmail(email: string) {
+        let user = (await this.database.select().from(schema.usersTable).where(eq(schema.usersTable.email, email))).at(0)
+        if (!user) {
+            throw new NotFoundException(`User with id ${email} not found`)
         }
         return user
     }

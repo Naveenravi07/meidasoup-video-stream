@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { deleteMetadata } from 'reflect-metadata/no-conflict';
 
 let mockDb = {
     from: jest.fn().mockReturnThis(),
@@ -32,7 +33,7 @@ describe('UsersService', () => {
     describe('create User', () => {
 
         it('should create a user successfully', async () => {
-            const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890' };
+            const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890', pwd: "123" };
 
             mockDb.select.mockReturnValueOnce({
                 from: jest.fn().mockReturnThis(),
@@ -45,12 +46,12 @@ describe('UsersService', () => {
             });
 
             const result = await service.createUser(newUser);
-            expect(result).toEqual({ ...newUser, id: 1 });
+            expect(result).toEqual({ ...newUser, id: 1, pwd: undefined });
             expect(mockDb.insert).toHaveBeenCalled();
         });
 
         it('should not create a duplicate user', async () => {
-            const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890' };
+            const newUser = { email: 'test@example.com', name: 'Test User', phone: '1234567890', pwd: "123" };
 
             mockDb.select.mockReturnValueOnce({
                 from: jest.fn().mockReturnThis(),

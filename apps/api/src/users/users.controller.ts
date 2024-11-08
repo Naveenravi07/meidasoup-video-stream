@@ -15,12 +15,6 @@ export class UsersController {
         return new GResponse({ status: HttpStatus.OK, data: user, message: "user fetched successfully" })
     }
 
-    @Get('/all')
-    async getAllUsers() {
-        let users = await this.usersService.getAllUsers();
-        return new GResponse({ status: HttpStatus.OK, data: users, message: "users fetched successfully" })
-    }
-
     @Post('/new')
     @UsePipes(new ZodValidationPipe(createUserRequestSchema))
     async createUser(@Body() body: CreateUserRequest) {

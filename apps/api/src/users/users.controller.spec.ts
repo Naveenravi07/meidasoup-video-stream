@@ -35,6 +35,7 @@ describe('UsersController', () => {
                 email: 'john.doe@example.com',
                 name: 'John Doe',
                 phone: '1234567890',
+                pwd:"123"
             };
 
             const _result = await controller.createUser(validBody);
