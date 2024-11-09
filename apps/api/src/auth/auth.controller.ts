@@ -1,8 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
-  Request,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -12,6 +12,7 @@ import type { CreateUserRequest } from 'src/users/dto/create-user-request';
 import { createUserRequestSchema } from 'src/users/dto/create-user-request';
 import { ZodValidationPipe } from 'comon/pipes/zodValidationPipe';
 import { GResponse } from 'comon/classes/GResponse';
+import { GithubAuthGuard } from './github-auth.gurad';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +20,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/local/login')
-  async local_login(@Request() req: Request) {}
+  async local_login() {}
 
   @Post('/local/signup')
   @UsePipes(new ZodValidationPipe(createUserRequestSchema))
@@ -31,4 +32,12 @@ export class AuthController {
       data: newUser,
     });
   }
+  
+  @UseGuards(GithubAuthGuard)
+  @Get('/github/login')
+  async github_login(){}
+
+  @UseGuards(GithubAuthGuard)
+  @Get('/github/cb')
+  async github_cb(){}
 }
