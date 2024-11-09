@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { deleteMetadata } from 'reflect-metadata/no-conflict';
 
 let mockDb = {
     from: jest.fn().mockReturnThis(),
