@@ -3,18 +3,21 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from 'comon/filters/execption-filter';
 import session from 'express-session';
 import passport from 'passport';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    const configService = app.get(ConfigService);
+    app.useGlobalFilters(new AllExceptionsFilter())
+
     app.use(
         session({
-            secret: "some cool pass",
+            secret: configService.getOrThrow("SESSION_STORE_SECRET") ,
             resave: false,
             saveUninitialized: false,
             cookie: { maxAge: 3600000 }
         })
     )
-    app.useGlobalFilters(new AllExceptionsFilter())
     
     app.use(passport.initialize())
     app.use(passport.session())

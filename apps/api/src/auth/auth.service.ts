@@ -13,7 +13,7 @@ export class AuthService {
         if (!isValid) {
             throw new UnauthorizedException("Invalid Password")
         }
-        return user
+        return {name:user.name,id:user.id,email:user.email}
     }
 
     async signupLocal(user: CreateUserRequest) {
