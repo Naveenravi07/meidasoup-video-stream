@@ -7,7 +7,7 @@ import { CreateUserRequest } from 'src/users/dto/create-user-request';
 export class AuthService {
     constructor(private readonly userService: UsersService) { }
 
-    async validateUser(email: string, pwd: string) {
+    async validateLocalUser(email: string, pwd: string) {
         let user = await this.userService.getUserByEmail(email);
         let isValid = await bcrypt.compare(pwd, user.pwd);
         if (!isValid) {

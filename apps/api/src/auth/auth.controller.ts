@@ -13,7 +13,6 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('/local/login')
     async local_login(@Request() req: Request) {
-        console.log(req)
     }
 
     @Post('/local/signup')
