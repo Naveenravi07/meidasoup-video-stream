@@ -4,8 +4,8 @@ import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-    imports: [DatabaseModule, forwardRef(() => AuthModule)],
-    providers: [UsersService],
-    exports:[UsersService]
+  imports: [DatabaseModule, forwardRef(() => AuthModule)],
+  providers: [UsersService],
+  exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}
