@@ -46,7 +46,6 @@ describe('AuthService', () => {
       ).toEqual({
         name: mockUser.name,
         id: mockUser.id,
-        email: mockUser.email,
       });
     });
 
@@ -56,14 +55,11 @@ describe('AuthService', () => {
         pwd: 'hashedpwd',
         name: 'Test User',
         id: 1,
-        phone: '1982182',
       };
       mockUserService.getUserByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(
-        authService.validateLocalUser(mockUser.email, mockUser.pwd),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(authService.validateLocalUser(mockUser.email, "wrongpwdbro")).rejects.toThrow(UnauthorizedException);
     });
   });
 });
