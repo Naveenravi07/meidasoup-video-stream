@@ -59,7 +59,9 @@ describe('AuthService', () => {
       mockUserService.getUserByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(authService.validateLocalUser(mockUser.email, "wrongpwdbro")).rejects.toThrow(UnauthorizedException);
+      await expect(
+        authService.validateLocalUser(mockUser.email, 'wrongpwdbro'),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });
