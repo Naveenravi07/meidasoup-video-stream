@@ -8,6 +8,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_CONNECTION } from '../../src/database/database-connection';
 import * as schema from './schema';
 import { eq } from 'drizzle-orm';
+import { PgUUID } from 'drizzle-orm/pg-core';
 
 @Injectable()
 export class UsersService {
@@ -32,11 +33,11 @@ export class UsersService {
       .values(user)
       .returning();
     const userWithoutPwd = { ...newUser.at(0) };
-    delete userWithoutPwd.pwd;
+    delete userWithoutPwd?.pwd;
     return userWithoutPwd;
   }
 
-  async getUser(id: number) {
+  async getUser(id: string) {
     const user = (
       await this.database
         .select()

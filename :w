@@ -1,0 +1,12 @@
+import { z } from 'zod';
+
+export const loginProviders = z.enum(["github", "email"])
+
+export const createLocalUserRequestSchema = z.object({
+    email: z.string().email(),
+    name: z.string(),
+    pwd: z.string().nullable(),
+    provider: loginProviders,
+    pfpUrl: z.string().nullable(),
+});
+export type CreateLocalUserRequest = z.infer<typeof createLocalUserRequestSchema>;

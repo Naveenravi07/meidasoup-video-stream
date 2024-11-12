@@ -14,7 +14,14 @@ import { GithubStratergy } from './github.stratergy';
     forwardRef(() => UsersModule),
     PassportModule.register({ session: true }),
   ],
-  providers: [AuthService, LocalStratergy, LocalAuthGuard, SessionSerializer,GithubAuthGuard,GithubStratergy],
+  providers: [
+    AuthService,
+    LocalStratergy,
+    LocalAuthGuard,
+    SessionSerializer,
+    GithubAuthGuard,
+    GithubStratergy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

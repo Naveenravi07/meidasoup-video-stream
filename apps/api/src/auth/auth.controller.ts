@@ -3,13 +3,15 @@ import {
   Controller,
   Get,
   Post,
+  Session,
+  Request,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.gurad';
-import type { CreateUserRequest } from 'src/users/dto/create-user-request';
-import { createUserRequestSchema } from 'src/users/dto/create-user-request';
+import type { CreateLocalUserRequest } from 'src/users/dto/create-user-request';
+import { createLocalUserRequestSchema } from 'src/users/dto/create-user-request';
 import { ZodValidationPipe } from 'comon/pipes/zodValidationPipe';
 import { GResponse } from 'comon/classes/GResponse';
 import { GithubAuthGuard } from './github-auth.gurad';
@@ -23,8 +25,8 @@ export class AuthController {
   async local_login() {}
 
   @Post('/local/signup')
-  @UsePipes(new ZodValidationPipe(createUserRequestSchema))
-  async local_signup(@Body() body: CreateUserRequest) {
+  @UsePipes(new ZodValidationPipe(createLocalUserRequestSchema))
+  async local_signup(@Body() body: CreateLocalUserRequest) {
     const newUser = await this.authService.signupLocal(body);
     return new GResponse({
       status: 201,
@@ -32,12 +34,12 @@ export class AuthController {
       data: newUser,
     });
   }
-  
+
   @UseGuards(GithubAuthGuard)
   @Get('/github/login')
-  async github_login(){}
+  async github_login() {}
 
   @UseGuards(GithubAuthGuard)
   @Get('/github/cb')
-  async github_cb(){}
+  async github_cb() {}
 }

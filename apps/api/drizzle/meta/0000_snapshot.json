@@ -1,5 +1,5 @@
 {
-  "id": "3c80e269-e42d-456b-8f75-569421107b3e",
+  "id": "b1e7f34f-5027-4794-9844-be003543bc40",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,30 +10,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "users_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
           "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pwd": {
-          "name": "pwd",
-          "type": "varchar(60)",
           "primaryKey": false,
           "notNull": true
         },
@@ -43,11 +27,37 @@
           "primaryKey": false,
           "notNull": true
         },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(12)",
+        "provider": {
+          "name": "provider",
+          "type": "providers",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "pwd": {
+          "name": "pwd",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "githubId": {
+          "name": "githubId",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pfpUrl": {
+          "name": "pfpUrl",
+          "type": "varchar(90)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -67,7 +77,16 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.providers": {
+      "name": "providers",
+      "schema": "public",
+      "values": [
+        "email",
+        "github"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

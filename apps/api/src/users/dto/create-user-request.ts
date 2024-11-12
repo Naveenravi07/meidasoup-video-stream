@@ -1,9 +1,26 @@
 import { z } from 'zod';
 
-export const createUserRequestSchema = z.object({
+export const loginProviders = z.enum(['github', 'email']);
+
+export const createLocalUserRequestSchema = z.object({
   email: z.string().email(),
   name: z.string(),
   pwd: z.string(),
-  phone: z.string(),
+  provider: loginProviders,
+  pfpUrl: z.string().nullable(),
 });
-export type CreateUserRequest = z.infer<typeof createUserRequestSchema>;
+
+export const createGithubUserRequestSchema = z.object({
+  email: z.string().email(),
+  name: z.string(),
+  provider: loginProviders,
+  pfpUrl: z.string().nullable(),
+  githubId: z.string(),
+});
+
+export type CreateLocalUserRequest = z.infer<
+  typeof createLocalUserRequestSchema
+>;
+export type CreateGithubUserRequest = z.infer<
+  typeof createGithubUserRequestSchema
+>;
