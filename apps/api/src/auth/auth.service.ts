@@ -29,6 +29,7 @@ export class AuthService {
 
   async signupLocal(user: CreateLocalUserRequest) {
     user.provider = 'email';
+    user.pfpUrl = user.pfpUrl ?? null;
     user.pwd = await bcrypt.hash(user.pwd, 10);
     const doc = await this.userService.createUser(user);
     return doc;

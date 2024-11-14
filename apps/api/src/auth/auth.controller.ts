@@ -3,8 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Session,
-  Request,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';

@@ -15,22 +15,50 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GithubIcon } from "lucide-react";
-import { signupWithGithub, signupUser } from "./signupActions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CONFLICT } from "http-status-codes";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const onSubmit = async (formData: FormData) => {
     setIsLoading(true);
+    setError(null);
     try {
-      await signupUser(formData);
-      router.push("/dashboard");
+      let response = await fetch("http://localhost:3000/auth/local/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          pwd: formData.get("password"),
+          name: formData.get("name"),
+        }),
+      });
+      if (response.ok) {
+        router.push("/");
+      } else {
+        let json = await response.json();
+        if (response.status === CONFLICT) {
+          setError(json.message ?? "Signup Failed");
+        } else {
+          setError(
+            json?.message?.[0]?.field + "   " + json?.message?.[0]?.message ||
+              "Signup Failed",
+          );
+        }
+      }
     } catch (error) {
       console.error("Signup error:", error);
+      setError("An unexpected error occurred. Please try again later.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onGithubSignup = async () => {
+    console.log("GitHub signup not implemented yet");
   };
 
   return (
@@ -43,6 +71,11 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form action={onSubmit}>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -64,17 +97,15 @@ export default function SignupPage() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <form action={signupWithGithub} className="w-full">
-            <Button
-              type="submit"
-              variant="outline"
-              className="w-full"
-              disabled={isLoading}
-            >
-              <GithubIcon className="mr-2 h-4 w-4" />
-              Sign up with GitHub
-            </Button>
-          </form>
+          <Button
+            onClick={onGithubSignup}
+            variant="outline"
+            className="w-full"
+            disabled={isLoading}
+          >
+            <GithubIcon className="mr-2 h-4 w-4" />
+            Sign up with GitHub
+          </Button>
           <div className="text-center text-sm">
             Already have an account?{" "}
             <Link href="/login" className="text-blue-500 hover:underline">

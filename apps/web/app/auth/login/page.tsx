@@ -14,19 +14,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GithubIcon } from "lucide-react";
-import { loginUser, loginWithGithub } from "./loginActions";
+import { UNAUTHORIZED, NOT_FOUND } from "http-status-codes";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const onSubmit = async (formData: FormData) => {
     setIsLoading(true);
     try {
-      await loginUser(formData);
-      router.push("/dashboard");
+      let response = await fetch("http://localhost:3000/auth/local/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          pwd: formData.get("password"),
+        }),
+      });
+      if (response.ok) {
+        router.push("/");
+      } else {
+        if (response.status === UNAUTHORIZED || response.status === NOT_FOUND) {
+          let json = await response.json();
+          setError(json?.message ?? "Unauthorized ");
+          return;
+        }
+        setError("Something went wrong");
+      }
     } catch (error) {
-      console.error("Login error:", error);
+      setError("An unexpected error occurred. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +60,11 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form action={onSubmit}>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -59,7 +82,7 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <form action={loginWithGithub} className="w-full">
+          <form className="w-full">
             <Button
               type="submit"
               variant="outline"
