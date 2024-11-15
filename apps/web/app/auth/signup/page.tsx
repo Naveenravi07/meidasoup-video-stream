@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -26,7 +26,7 @@ export default function SignupPage() {
         setIsLoading(true);
         setError(null);
         try {
-            let response = await fetch("http://localhost:3000/auth/local/signup", {
+            let response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/local/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -48,8 +48,8 @@ export default function SignupPage() {
         }
     };
 
-    const onGithubSignup = async () => {
-        console.log("GitHub signup not implemented yet");
+    const onGithubSignup = () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/github/login`;
     };
 
     return (
@@ -99,7 +99,7 @@ export default function SignupPage() {
                     </Button>
                     <div className="text-center text-sm">
                         Already have an account?{" "}
-                        <Link href="/login" className="text-blue-500 hover:underline">
+                        <Link href="/auth/login" className="text-blue-500 hover:underline">
                             Login
                         </Link>
                     </div>

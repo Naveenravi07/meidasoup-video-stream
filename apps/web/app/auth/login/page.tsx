@@ -24,7 +24,7 @@ export default function LoginPage() {
     const onSubmit = async (formData: FormData) => {
         setIsLoading(true);
         try {
-            let response = await fetch("http://localhost:3000/auth/local/login", {
+            let response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/local/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -43,6 +43,10 @@ export default function LoginPage() {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const loginGithub = () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/github/login`;
     };
 
     return (
@@ -77,20 +81,18 @@ export default function LoginPage() {
                     </form>
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
-                    <form className="w-full">
-                        <Button
-                            type="submit"
-                            variant="outline"
-                            className="w-full"
-                            disabled={isLoading}
-                        >
-                            <GithubIcon className="mr-2 h-4 w-4" />
-                            Login with GitHub
-                        </Button>
-                    </form>
+                    <Button
+                        onClick={loginGithub}
+                        variant="outline"
+                        className="w-full"
+                        disabled={isLoading}
+                    >
+                        <GithubIcon className="mr-2 h-4 w-4" />
+                        Login with GitHub
+                    </Button>
                     <div className="text-center text-sm">
                         Don't have an account?{" "}
-                        <Link href="/signup" className="text-blue-500 hover:underline">
+                        <Link href="/auth/signup" className="text-blue-500 hover:underline">
                             Sign up
                         </Link>
                     </div>
@@ -98,4 +100,5 @@ export default function LoginPage() {
             </Card>
         </div>
     );
+
 }
