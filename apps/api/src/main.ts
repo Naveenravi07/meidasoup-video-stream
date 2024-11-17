@@ -14,9 +14,9 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:5000',
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   });
-  app.use(cookieParser())
+  app.use(cookieParser());
   app.use(
     session({
       secret: configService.getOrThrow('SESSION_STORE_SECRET'),
@@ -28,8 +28,8 @@ async function bootstrap() {
         httpOnly: true,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-      }
-    })
+      },
+    }),
   );
 
   app.use(passport.initialize());

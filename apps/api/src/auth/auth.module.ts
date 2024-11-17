@@ -10,10 +10,7 @@ import { GithubAuthGuard } from './github-auth.gurad';
 import { GithubStratergy } from './github.stratergy';
 
 @Module({
-  imports: [
-    forwardRef(() => UsersModule),
-    PassportModule.register({ session: true }),
-  ],
+  imports: [forwardRef(() => UsersModule), PassportModule.register({ session: true })],
   providers: [
     AuthService,
     LocalStratergy,

@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './../users/users.service';
 import bcrypt from 'bcrypt';
 import type {
@@ -38,23 +34,18 @@ export class AuthService {
   async validateGithubUser(profile: Profile) {
     const email: string | null = profile.emails?.[0]?.value || null;
     if (!email) {
-      throw new UnauthorizedException(
-        'GitHub account does not provide an email',
-      );
+      throw new UnauthorizedException('GitHub account does not provide an email');
     }
     try {
       const userExist = await this.userService.getUserByEmail(email);
       return { name: userExist.name, id: userExist.id };
     } catch (e) {
       if (e instanceof NotFoundException) {
-        const name: string =
-          profile.displayName || email.split('@')?.[0] || 'Github user';
+        const name: string = profile.displayName || email.split('@')?.[0] || 'Github user';
         const pfpUrl: string | null = profile?.photos?.[0]?.value || null;
         const githubId: string = profile?.id;
         if (!githubId) {
-          throw new UnauthorizedException(
-            'GitHub account does not provide an id',
-          );
+          throw new UnauthorizedException('GitHub account does not provide an id');
         }
         const user: CreateGithubUserRequest = {
           name,

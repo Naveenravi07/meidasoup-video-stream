@@ -8,11 +8,7 @@ const mockDb = {
   select: jest.fn(),
   where: jest.fn().mockReturnValue([]),
   insert: jest.fn().mockReturnThis(),
-  returning: jest
-    .fn()
-    .mockResolvedValue([
-      { id: 1, email: 'test@example.com', name: 'Test User' },
-    ]),
+  returning: jest.fn().mockResolvedValue([{ id: 1, email: 'test@example.com', name: 'Test User' }]),
 };
 
 describe('UsersService', () => {
@@ -110,9 +106,7 @@ describe('UsersService', () => {
       });
 
       await expect(service.getUser(some_random_stupid_id)).rejects.toThrow(
-        new NotFoundException(
-          `User with id ${some_random_stupid_id} not found`,
-        ),
+        new NotFoundException(`User with id ${some_random_stupid_id} not found`),
       );
       expect(mockDb.select).toHaveBeenCalled();
     });
@@ -125,9 +119,9 @@ describe('UsersService', () => {
         where: jest.fn().mockReturnValueOnce([]),
       });
 
-      await expect(
-        service.getUser(some_random_stupid_id as unknown as string),
-      ).rejects.toThrow(new NotFoundException('User with id null not found'));
+      await expect(service.getUser(some_random_stupid_id as unknown as string)).rejects.toThrow(
+        new NotFoundException('User with id null not found'),
+      );
       expect(mockDb.select).toHaveBeenCalled();
     });
   });

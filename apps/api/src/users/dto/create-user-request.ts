@@ -18,9 +18,5 @@ export const createGithubUserRequestSchema = z.object({
   githubId: z.string(),
 });
 
-export type CreateLocalUserRequest = z.infer<
-  typeof createLocalUserRequestSchema
->;
-export type CreateGithubUserRequest = z.infer<
-  typeof createGithubUserRequestSchema
->;
+export type CreateLocalUserRequest = z.infer<typeof createLocalUserRequestSchema>;
+export type CreateGithubUserRequest = z.infer<typeof createGithubUserRequestSchema>;

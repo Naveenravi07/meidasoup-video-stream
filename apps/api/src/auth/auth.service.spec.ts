@@ -19,10 +19,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AuthService,
-        { provide: UsersService, useValue: mockUserService },
-      ],
+      providers: [AuthService, { provide: UsersService, useValue: mockUserService }],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
@@ -41,9 +38,7 @@ describe('AuthService', () => {
       mockUserService.getUserByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      expect(
-        await authService.validateLocalUser(mockUser.email, mockUser.pwd),
-      ).toEqual({
+      expect(await authService.validateLocalUser(mockUser.email, mockUser.pwd)).toEqual({
         name: mockUser.name,
         id: mockUser.id,
       });
@@ -59,9 +54,9 @@ describe('AuthService', () => {
       mockUserService.getUserByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(
-        authService.validateLocalUser(mockUser.email, 'wrongpwdbro'),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(authService.validateLocalUser(mockUser.email, 'wrongpwdbro')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });
