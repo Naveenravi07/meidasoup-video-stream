@@ -1,18 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Settings, LogOut } from 'lucide-react'
 import React from "react";
 import { Providers } from "@/query/Provider";
+import Navbar from "@/components/Navbar";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -37,32 +28,8 @@ export default function RootLayout({
         <html lang="en">
             <Providers>
                 <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                    <nav className="flex items-center justify-between p-4 bg-card text-card-foreground">
-                        <div className="text-xl font-bold">VideoChat</div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                                    <Avatar className="h-8 w-8">
-                                        <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Profile" />
-                                        <AvatarFallback>JD</AvatarFallback>
-                                    </Avatar>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56" align="end" forceMount>
-                                <DropdownMenuItem>
-                                    <Settings className="mr-2 h-4 w-4" />
-                                    <span>Settings</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    <span>Sign out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </nav>
+                    <Navbar/>
                     {children}
-
                 </body>
             </Providers>
         </html>

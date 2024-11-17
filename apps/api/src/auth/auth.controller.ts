@@ -33,8 +33,6 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('/local/login')
     async local_login(@Response() res: ExpressResponse, @CurrentUser() user: SessionUser, @Session() ses: ExpressSession) {
-        console.log("\n Login route sessionId = ", ses.id)
-        console.log(user)
         res.cookie('x-auth-cookie', user?.id)
         res.status(200).send("Success")
     }
@@ -49,13 +47,13 @@ export class AuthController {
             data: newUser,
         });
     }
-
-    @UseGuards(GithubAuthGuard)
+    
     @Get('/github/login')
+    @UseGuards(GithubAuthGuard)
     async github_login() { }
 
-    @UseGuards(GithubAuthGuard)
     @Get('/github/cb')
+    @UseGuards(GithubAuthGuard)
     @Redirect('http://localhost:5000')
     async github_cb(@Response() res: ExpressResponse, @CurrentUser() user: SessionUser) {
         console.log(user)
@@ -63,9 +61,7 @@ export class AuthController {
     }
 
     @Get('/me')
-    async get_user_data(@CurrentUser() user: SessionUser, @Response() res: ExpressResponse, @Session() ses: ExpressSession, @Request() req: any) {
-        console.log("Me route Session id = ", ses.id)
-        console.log(user)
+    async get_user_data(@CurrentUser() user: SessionUser, @Response() res: ExpressResponse) {
         if (user == null) {
             res.clearCookie('x-auth-cookie');
             return res.status(400).json({
