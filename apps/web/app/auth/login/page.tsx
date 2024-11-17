@@ -27,13 +27,14 @@ export default function LoginPage() {
             let response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/local/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials:"include",
                 body: JSON.stringify({
                     email: formData.get("email"),
                     pwd: formData.get("password"),
                 }),
             });
             if (response.ok) {
-                router.push("/");
+                router.push("/meet/21");
             } else {
                 let json = await response.json();
                 setError(json?.message ?? "Login failed ");

@@ -6,6 +6,9 @@ import {
     Redirect,
     UseGuards,
     UsePipes,
+    Response,
+    Session,
+    Request
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.gurad';
@@ -14,14 +17,27 @@ import { createLocalUserRequestSchema } from 'src/users/dto/create-user-request'
 import { ZodValidationPipe } from 'comon/pipes/zodValidationPipe';
 import { GResponse } from 'comon/classes/GResponse';
 import { GithubAuthGuard } from './github-auth.gurad';
+import { UsersService } from 'src/users/users.service';
+import { CurrentUser } from 'comon/decorators/current-user-decorator';
+import type { SessionUser } from 'src/users/dto/session-user';
+import type { Response as ExpressResponse } from 'express';
+import { Session as ExpressSession } from 'express-session';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(
+        private readonly authService: AuthService,
+        private readonly userService: UsersService
+    ) { }
 
     @UseGuards(LocalAuthGuard)
     @Post('/local/login')
-    async local_login() { }
+    async local_login(@Response() res: ExpressResponse, @CurrentUser() user: SessionUser, @Session() ses: ExpressSession) {
+        console.log("\n Login route sessionId = ", ses.id)
+        console.log(user)
+        res.cookie('x-auth-cookie', user?.id)
+        res.status(200).send("Success")
+    }
 
     @Post('/local/signup')
     @UsePipes(new ZodValidationPipe(createLocalUserRequestSchema))
@@ -41,7 +57,29 @@ export class AuthController {
     @UseGuards(GithubAuthGuard)
     @Get('/github/cb')
     @Redirect('http://localhost:5000')
-    async github_cb() {
-        
+    async github_cb(@Response() res: ExpressResponse, @CurrentUser() user: SessionUser) {
+        console.log(user)
+        res.cookie('x-auth-cookie', user?.id)
     }
+
+    @Get('/me')
+    async get_user_data(@CurrentUser() user: SessionUser, @Response() res: ExpressResponse, @Session() ses: ExpressSession, @Request() req: any) {
+        console.log("Me route Session id = ", ses.id)
+        console.log(user)
+        if (user == null) {
+            res.clearCookie('x-auth-cookie');
+            return res.status(400).json({
+                data: undefined,
+                message: "User fetch failed",
+                status: 400
+            });
+        }
+        let data = await this.userService.getUser(user.id);
+        return res.status(200).json({
+            data: data,
+            message: "User fetched successfully",
+            status: 200
+        });
+    }
+
 }

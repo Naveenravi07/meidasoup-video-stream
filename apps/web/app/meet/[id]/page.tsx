@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Mic, MicOff, Video, VideoOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import useAuth from '@/hooks/useAuth'
 
 type Participant = {
     id: string
@@ -20,6 +21,7 @@ export default function Component() {
     const [myVideoOn, setMyVideoOn] = useState(true)
     const [currentPage, setCurrentPage] = useState(0)
     const participantsPerPage = 6
+    const {user,error,isError} = useAuth();
 
     useEffect(() => {
         const mockParticipants: Participant[] = Array.from({ length: 9 }, (_, i) => ({
@@ -32,7 +34,6 @@ export default function Component() {
     }, [])
 
     const totalPages = Math.ceil(participants.length / participantsPerPage)
-
     const getGridClass = (count: number) => {
         if (count <= 2) return 'grid-cols-1 sm:grid-cols-2'
         if (count <= 4) return 'grid-cols-2'

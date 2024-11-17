@@ -4,24 +4,36 @@ import { AllExceptionsFilter } from 'comon/filters/execption-filter';
 import session from 'express-session';
 import passport from 'passport';
 import { ConfigService } from '@nestjs/config';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   app.useGlobalFilters(new AllExceptionsFilter());
 
+  app.enableCors({
+    origin: 'http://localhost:5000',
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  });
+  app.use(cookieParser())
   app.use(
     session({
       secret: configService.getOrThrow('SESSION_STORE_SECRET'),
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 3600000 },
-    }),
+      name: 'coolSession',
+      cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+      }
+    })
   );
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.enableCors({ origin: '*' });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
