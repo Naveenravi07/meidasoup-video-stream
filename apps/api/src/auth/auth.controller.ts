@@ -81,4 +81,16 @@ export class AuthController {
       status: 200,
     });
   }
+
+  @Get('/logout')
+  async logout_user(@Session() ses: ExpressSession, @Response() res: ExpressResponse) {
+    ses.destroy(err => {
+      if (err) throw new Error('Logout failed');
+    });
+    res.clearCookie('x-auth-cookie');
+    return res.status(200).json({
+      message: 'User lgout successfully',
+      status: 200,
+    });
+  }
 }

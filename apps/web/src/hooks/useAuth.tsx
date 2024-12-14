@@ -13,11 +13,23 @@ const getUserData = async () => {
     console.error('Failed to fetch user data:', response.statusText);
     throw new Error('Failed to fetch user data');
   }
-  console.log('Riight here');
   const data = await response.json();
   console.log('Fetched user data:', data);
-
   return data?.data;
+};
+
+const handleLogout = async () => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    console.error('Failed to logout user ', response.statusText);
+  } else {
+    const data = await response.json();
+    Cookie.remove('x-auth-cookie');
+    console.log('logout success', data);
+  }
 };
 
 const useAuth = () => {
@@ -29,9 +41,7 @@ const useAuth = () => {
     enabled: Boolean(Cookie.get('x-auth-cookie')),
     retry: false,
   });
-
   const { data, error, isLoading, isError, isFetching } = query;
-
   const invalidateUser = () => {
     queryClient.invalidateQueries({ queryKey: ['user'] });
   };
@@ -43,6 +53,7 @@ const useAuth = () => {
     isError,
     isFetching,
     invalidate: invalidateUser,
+    logout: handleLogout,
   };
 };
 

@@ -8,7 +8,13 @@ import { MediasoupGateway } from './mediasoup/mediasoup.gateway';
 import { MediasoupModule } from './mediasoup/mediasoup.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule, MediasoupModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    MediasoupModule,
+  ],
   controllers: [],
   providers: [MediasoupService, MediasoupGateway],
 })

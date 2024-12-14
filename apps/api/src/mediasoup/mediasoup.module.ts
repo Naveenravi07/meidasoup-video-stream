@@ -3,6 +3,6 @@ import { MediasoupGateway } from './mediasoup.gateway';
 import { MediasoupService } from './mediasoup.service';
 
 @Module({
-    providers: [MediasoupService, MediasoupGateway]
+  providers: [MediasoupService, MediasoupGateway],
 })
-export class MediasoupModule { }
+export class MediasoupModule {}

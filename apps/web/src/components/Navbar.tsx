@@ -14,7 +14,12 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LogOut, Settings, User } from 'lucide-react';
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { user, logout, invalidate, isError } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    invalidate();
+  };
 
   return (
     <nav className="flex items-center justify-between p-4 bg-background">
@@ -24,7 +29,7 @@ export default function Navbar() {
         </a>
       </div>
 
-      {user ? (
+      {user && !isError ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -54,7 +59,7 @@ export default function Navbar() {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
