@@ -3,10 +3,13 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { MediasoupService } from './mediasoup/mediasoup.service';
+import { MediasoupGateway } from './mediasoup/mediasoup.gateway';
+import { MediasoupModule } from './mediasoup/mediasoup.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, AuthModule, MediasoupModule],
   controllers: [],
-  providers: [],
+  providers: [MediasoupService, MediasoupGateway],
 })
 export class AppModule {}
